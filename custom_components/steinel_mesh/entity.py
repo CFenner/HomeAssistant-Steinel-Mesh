@@ -27,7 +27,6 @@ class GatewayNodeEntity(CoordinatorEntity[GatewayCoordinator]):
             name=node["name"],
             manufacturer=node.get("manufacturer") or "Steinel",
             model=node.get("product") or f"Product {node.get('product_id', '?')}",
-            model_id=node.get("product_id"),
         )
 
     @property
