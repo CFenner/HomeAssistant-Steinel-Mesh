@@ -1,11 +1,20 @@
 {
   "config": {
+    "flow_title": "Steinel Mesh ({name})",
     "step": {
       "user": {
         "title": "Steinel Mesh",
         "description": "Enter the address and web login of the ESP32-C3 gateway.",
         "data": {
           "host": "Host or IP address",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "discovery_confirm": {
+        "title": "Steinel Mesh gateway found",
+        "description": "Enter the web login of the gateway at {host}.",
+        "data": {
           "username": "Username",
           "password": "Password"
         }
