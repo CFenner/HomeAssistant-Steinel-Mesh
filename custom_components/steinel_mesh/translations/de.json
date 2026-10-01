@@ -25,18 +25,18 @@
         "name": "Mesh-Verbindung"
       },
       "presence": {
-        "name": "Anwesenheit (Element {element})"
+        "name": "Anwesenheit"
       },
       "motion": {
-        "name": "Bewegung (Element {element})"
+        "name": "Bewegung"
       }
     },
     "sensor": {
       "illuminance": {
-        "name": "Beleuchtungsstärke (Element {element})"
+        "name": "Beleuchtungsstärke"
       },
       "raw_reading": {
-        "name": "Sensor {property} (Element {element})"
+        "name": "Sensor {property}"
       },
       "company_id": {
         "name": "Company-ID"

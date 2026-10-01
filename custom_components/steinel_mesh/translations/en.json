@@ -35,18 +35,18 @@
         "name": "Mesh connection"
       },
       "presence": {
-        "name": "Presence (element {element})"
+        "name": "Presence"
       },
       "motion": {
-        "name": "Motion (element {element})"
+        "name": "Motion"
       }
     },
     "sensor": {
       "illuminance": {
-        "name": "Illuminance (element {element})"
+        "name": "Illuminance"
       },
       "raw_reading": {
-        "name": "Sensor {property} (element {element})"
+        "name": "Sensor {property}"
       },
       "company_id": {
         "name": "Company ID"
