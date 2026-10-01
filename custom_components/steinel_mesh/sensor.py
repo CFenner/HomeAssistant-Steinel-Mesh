@@ -1,4 +1,4 @@
-"""Illuminance readings, plus raw values for properties we cannot decode."""
+"""Illuminance, device identity and revisions, plus raw values for properties we cannot decode."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from homeassistant.const import LIGHT_LUX, EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN, PROPERTY_MOTION, PROPERTY_PRESENCE
+from .const import DOMAIN, PROPERTY_FIRMWARE, PROPERTY_HARDWARE, PROPERTY_MOTION, PROPERTY_PRESENCE
 from .entity import GatewayNodeEntity, add_sensor_entities
 
 
@@ -22,10 +22,16 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator = hass.data[DOMAIN][entry.entry_id]
+    async_add_entities(SteinelCompanyId(coordinator, address) for address in coordinator.data)
 
     def factory(address: str, reading: dict[str, Any]):
         if "lux" in reading:
             return SteinelLux(coordinator, address, reading)
+        if reading["property"] == PROPERTY_FIRMWARE:
+            # An empty answer means the device has no firmware revision to report.
+            return SteinelRevision(coordinator, address, reading, "firmware") if "firmware_revision" in reading else None
+        if reading["property"] == PROPERTY_HARDWARE:
+            return SteinelRevision(coordinator, address, reading, "hardware") if "hardware_revision" in reading else None
         if reading["property"] in (PROPERTY_PRESENCE, PROPERTY_MOTION):
             return None  # shown as a binary sensor
         return SteinelRawReading(coordinator, address, reading)
@@ -81,3 +87,43 @@ class SteinelRawReading(_Reading, SensorEntity):
     def native_value(self) -> str | None:
         reading = self.reading
         return None if reading is None else reading.get("raw")
+
+
+class _NodeInfo(GatewayNodeEntity, SensorEntity):
+    """Identity that comes from the imported network and does not change."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    @property
+    def available(self) -> bool:
+        # Known from the backup, so it does not depend on the device answering.
+        return self.coordinator.last_update_success and self._address in self.coordinator.data
+
+
+class SteinelCompanyId(_NodeInfo):
+    _attr_translation_key = "company_id"
+
+    def __init__(self, coordinator, address: str) -> None:
+        super().__init__(coordinator, address, "company_id")
+
+    @property
+    def native_value(self) -> str | None:
+        company = self.node.get("company_id")
+        manufacturer = self.node.get("manufacturer")
+        return f"{company} ({manufacturer})" if company and manufacturer else company
+
+
+class SteinelRevision(_Reading, SensorEntity):
+    """Firmware or hardware revision, shown only for devices that report one."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator, address: str, reading: dict[str, Any], kind: str) -> None:
+        self._kind = kind
+        super().__init__(coordinator, address, reading, kind)
+        self._attr_translation_key = f"{kind}_revision"
+
+    @property
+    def native_value(self) -> int | None:
+        reading = self.reading
+        return None if reading is None else reading.get(f"{self._kind}_revision")

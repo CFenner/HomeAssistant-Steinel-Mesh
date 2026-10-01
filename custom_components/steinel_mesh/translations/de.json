@@ -37,6 +37,15 @@
       },
       "raw_reading": {
         "name": "Sensor {property} (Element {element})"
+      },
+      "company_id": {
+        "name": "Company-ID"
+      },
+      "firmware_revision": {
+        "name": "Firmware-Revision"
+      },
+      "hardware_revision": {
+        "name": "Hardware-Revision"
       }
     },
     "switch": {
