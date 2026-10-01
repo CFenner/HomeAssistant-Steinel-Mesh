@@ -146,9 +146,9 @@ def test_commands_use_query_args_and_clamp_brightness(host):
             await client.send_command("0x0010", threshold=25)
             await client.send_command("0x0010", threshold=5000)
             await client.send_command("0x0010", threshold=0)
-            await client.send_command("0x0010", run_on=60)
-            await client.send_command("0x0010", run_on=99999)
-            await client.send_command("0x0010", run_on=0)
+            await client.send_command("0x0010", regular_time=60)
+            await client.send_command("0x0010", regular_time=99999)
+            await client.send_command("0x0010", regular_time=0)
 
     run(go())
     assert Gateway.received == [
@@ -158,9 +158,9 @@ def test_commands_use_query_args_and_clamp_brightness(host):
         {"threshold": ["25"]},
         {"threshold": ["1500"]},
         {"threshold": ["1"]},
-        {"run_on": ["60"]},
-        {"run_on": ["3600"]},
-        {"run_on": ["10"]},
+        {"regular_time": ["60"]},
+        {"regular_time": ["3600"]},
+        {"regular_time": ["5"]},
     ]
 
 

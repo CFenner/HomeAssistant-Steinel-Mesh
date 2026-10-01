@@ -39,8 +39,8 @@
       "twilight_threshold": {
         "name": "Twilight threshold"
       },
-      "run_on_time": {
-        "name": "On-time after motion"
+      "regular_time": {
+        "name": "Regular time"
       }
     },
     "binary_sensor": {
