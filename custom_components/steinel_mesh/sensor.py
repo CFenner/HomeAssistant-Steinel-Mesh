@@ -22,11 +22,6 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities(
-        entity
-        for address in coordinator.data
-        for entity in (SteinelCompanyId(coordinator, address), SteinelProductId(coordinator, address))
-    )
 
     def factory(address: str, reading: dict[str, Any]):
         if "lux" in reading:
@@ -91,42 +86,6 @@ class SteinelRawReading(_Reading, SensorEntity):
     def native_value(self) -> str | None:
         reading = self.reading
         return None if reading is None else reading.get("raw")
-
-
-class _NodeInfo(GatewayNodeEntity, SensorEntity):
-    """Identity that comes from the imported network and does not change."""
-
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _attr_entity_registry_enabled_default = False
-
-    @property
-    def available(self) -> bool:
-        # Known from the backup, so it does not depend on the device answering.
-        return self.coordinator.last_update_success and self._address in self.coordinator.data
-
-
-class SteinelCompanyId(_NodeInfo):
-    _attr_translation_key = "company_id"
-
-    def __init__(self, coordinator, address: str) -> None:
-        super().__init__(coordinator, address, "company_id")
-
-    @property
-    def native_value(self) -> str | None:
-        company = self.node.get("company_id")
-        manufacturer = self.node.get("manufacturer")
-        return f"{company} ({manufacturer})" if company and manufacturer else company
-
-
-class SteinelProductId(_NodeInfo):
-    _attr_translation_key = "product_id"
-
-    def __init__(self, coordinator, address: str) -> None:
-        super().__init__(coordinator, address, "product_id")
-
-    @property
-    def native_value(self) -> str | None:
-        return self.node.get("product_id")
 
 
 class SteinelRevision(_Reading, SensorEntity):

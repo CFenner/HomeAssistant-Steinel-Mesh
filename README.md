@@ -42,7 +42,6 @@ Each device of the network appears as a Home Assistant device. When the gateway 
 | Automatic mode (switch) | Light Control | on: the lamp follows its own sensors; off: manual. A manual on/off or brightness command switches automatic mode off first. |
 | Twilight threshold (number, configuration) | a sensor and Light Control | ambient light level in lx below which automatic mode switches the lamp on; 1–1500 lx |
 | Illuminance | an illuminance sensor | in lx |
-| Company ID, Product ID | every device | diagnostic, disabled by default; known from the imported network, shown even while the device does not answer |
 | Firmware revision, Hardware revision | devices that report them | diagnostic; the gateway asks each device once after it starts, and the values also appear as the device's software and hardware version. Devices that do not provide them show nothing |
 | Motion / Presence | a motion or presence property | decoding of these properties is unverified until seen on real devices |
 | Mesh connection | every device | diagnostic; off when the gateway gets no answers |
