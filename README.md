@@ -14,6 +14,16 @@ Home Assistant cannot talk to a Bluetooth Mesh network directly. This integratio
 - An ESP32-C3 gateway running the firmware above, with your Steinel network imported (see the firmware's README).
 - The gateway's address and its web login (username `admin` and the administrator password).
 
+## Tested devices
+
+| Device | Type | Status |
+|---|---|---|
+| Steinel L 810 SC | Luminaire | Tested: switching, brightness, automatic mode, illuminance |
+| Steinel L 810 C | Luminaire | Tested: switching, brightness, automatic mode, illuminance |
+| Steinel IS 180 | Sensor | Tested: state and illuminance; motion detection not yet observed |
+
+Have you used the integration with another Steinel Bluetooth Mesh device? Please open an issue or pull request to add it to this list.
+
 ## Installation
 
 **HACS:** add this repository as a custom repository (category *Integration*), install **Steinel Mesh**, and restart Home Assistant.
