@@ -22,19 +22,10 @@
   "entity": {
     "binary_sensor": {
       "reachable": {
-        "name": "Mesh-Verbindung"
-      },
-      "presence": {
-        "name": "Anwesenheit"
-      },
-      "motion": {
-        "name": "Bewegung"
+        "name": "Mesh Netzwerk"
       }
     },
     "sensor": {
-      "illuminance": {
-        "name": "Beleuchtungsstärke"
-      },
       "raw_reading": {
         "name": "Sensor {property}"
       },

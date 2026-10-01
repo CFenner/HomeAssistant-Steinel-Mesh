@@ -44,7 +44,7 @@ Each device of the network appears as a Home Assistant device. When the gateway 
 | Illuminance | an illuminance sensor | in lx |
 | Firmware revision, Hardware revision | devices that report them | diagnostic; the gateway asks each device once after it starts, and the values also appear as the device's software and hardware version. Devices that do not provide them show nothing |
 | Motion / Presence | a motion or presence property | decoding of these properties is unverified until seen on real devices |
-| Mesh connection | every device | diagnostic; off when the gateway gets no answers |
+| Mesh network | every device | diagnostic; off when the gateway gets no answers |
 | Sensor `0x....` | any other sensor property | diagnostic, disabled by default; shows the raw bytes |
 
 Devices are read about every 20 seconds by the gateway and fetched by Home Assistant every 10 seconds, so state can lag a command by a few seconds.

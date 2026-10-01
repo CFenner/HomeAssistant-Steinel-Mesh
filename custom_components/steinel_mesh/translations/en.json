@@ -32,19 +32,10 @@
     },
     "binary_sensor": {
       "reachable": {
-        "name": "Mesh connection"
-      },
-      "presence": {
-        "name": "Presence"
-      },
-      "motion": {
-        "name": "Motion"
+        "name": "Mesh network"
       }
     },
     "sensor": {
-      "illuminance": {
-        "name": "Illuminance"
-      },
       "raw_reading": {
         "name": "Sensor {property}"
       },

@@ -53,7 +53,6 @@ class _Reading(GatewayNodeEntity):
 
 
 class SteinelLux(_Reading, SensorEntity):
-    _attr_translation_key = "illuminance"
     _attr_device_class = SensorDeviceClass.ILLUMINANCE
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = LIGHT_LUX

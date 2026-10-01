@@ -65,7 +65,6 @@ class SteinelDetection(GatewayNodeEntity, BinarySensorEntity):
             if kind == "presence"
             else BinarySensorDeviceClass.MOTION
         )
-        self._attr_translation_key = kind
 
     @property
     def is_on(self) -> bool | None:
