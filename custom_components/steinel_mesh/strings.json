@@ -38,6 +38,9 @@
     "number": {
       "twilight_threshold": {
         "name": "Twilight threshold"
+      },
+      "run_on_time": {
+        "name": "On-time after motion"
       }
     },
     "binary_sensor": {

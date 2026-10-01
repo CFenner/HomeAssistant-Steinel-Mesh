@@ -61,8 +61,12 @@ class GatewayClient:
         brightness: int | None = None,
         auto: bool | None = None,
         threshold: int | None = None,
+        run_on: int | None = None,
     ) -> None:
-        """Queue a command. brightness is 0-100 percent, threshold 1-1500 lx."""
+        """Queue a command.
+
+        brightness is 0-100 percent, threshold 1-1500 lx, run_on 1-3600 seconds.
+        """
         params: dict[str, str] = {}
         if on is not None:
             params["on"] = "1" if on else "0"
@@ -72,6 +76,8 @@ class GatewayClient:
             params["auto"] = "1" if auto else "0"
         if threshold is not None:
             params["threshold"] = str(max(1, min(1500, threshold)))
+        if run_on is not None:
+            params["run_on"] = str(max(1, min(3600, run_on)))
         # The gateway requires a Content-Length header on POST, so send an
         # explicit empty form body; the values travel in the query string.
         await self._request(
