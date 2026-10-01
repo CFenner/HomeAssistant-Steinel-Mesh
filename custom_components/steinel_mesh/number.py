@@ -70,7 +70,7 @@ class SteinelRunOnTime(GatewayNodeEntity, NumberEntity):
     _attr_entity_category = EntityCategory.CONFIG
     _attr_device_class = NumberDeviceClass.DURATION
     _attr_native_unit_of_measurement = UnitOfTime.SECONDS
-    _attr_native_min_value = 1
+    _attr_native_min_value = 10
     _attr_native_max_value = 3600
     _attr_native_step = 1
     _attr_mode = NumberMode.BOX

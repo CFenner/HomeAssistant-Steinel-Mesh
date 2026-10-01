@@ -160,7 +160,7 @@ def test_commands_use_query_args_and_clamp_brightness(host):
         {"threshold": ["1"]},
         {"run_on": ["60"]},
         {"run_on": ["3600"]},
-        {"run_on": ["1"]},
+        {"run_on": ["10"]},
     ]
 
 
