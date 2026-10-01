@@ -22,7 +22,11 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities(SteinelCompanyId(coordinator, address) for address in coordinator.data)
+    async_add_entities(
+        entity
+        for address in coordinator.data
+        for entity in (SteinelCompanyId(coordinator, address), SteinelProductId(coordinator, address))
+    )
 
     def factory(address: str, reading: dict[str, Any]):
         if "lux" in reading:
@@ -93,6 +97,7 @@ class _NodeInfo(GatewayNodeEntity, SensorEntity):
     """Identity that comes from the imported network and does not change."""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = False
 
     @property
     def available(self) -> bool:
@@ -111,6 +116,17 @@ class SteinelCompanyId(_NodeInfo):
         company = self.node.get("company_id")
         manufacturer = self.node.get("manufacturer")
         return f"{company} ({manufacturer})" if company and manufacturer else company
+
+
+class SteinelProductId(_NodeInfo):
+    _attr_translation_key = "product_id"
+
+    def __init__(self, coordinator, address: str) -> None:
+        super().__init__(coordinator, address, "product_id")
+
+    @property
+    def native_value(self) -> str | None:
+        return self.node.get("product_id")
 
 
 class SteinelRevision(_Reading, SensorEntity):
