@@ -25,7 +25,8 @@
       "invalid_auth": "Invalid username or password"
     },
     "abort": {
-      "already_configured": "This gateway is already configured"
+      "already_configured": "This gateway is already configured",
+      "no_mac": "The gateway did not announce its MAC address"
     }
   },
   "entity": {

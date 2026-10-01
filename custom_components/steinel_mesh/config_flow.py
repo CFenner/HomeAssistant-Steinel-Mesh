@@ -8,6 +8,7 @@ import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME
+from homeassistant.helpers.device_registry import format_mac
 from homeassistant.helpers.httpx_client import get_async_client
 from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo
 
@@ -77,8 +78,12 @@ class SteinelMeshGatewayConfigFlow(ConfigFlow, domain=DOMAIN):
         """A gateway announced itself as an ESPHome device."""
         host = str(discovery_info.ip_address)
         name = discovery_info.name.removesuffix(ESPHOME_SERVICE)
-        # The announced name contains the MAC, so it survives an IP change.
-        await self.async_set_unique_id(name.lower())
+        # ESPHome announces the MAC, which survives an IP change and tells
+        # gateways apart.
+        mac = discovery_info.properties.get("mac")
+        if not mac:
+            return self.async_abort(reason="no_mac")
+        await self.async_set_unique_id(format_mac(mac))
         self._abort_if_unique_id_configured(updates={CONF_HOST: host})
         # A gateway that was added by hand is identified by its host.
         for entry in self._async_current_entries():

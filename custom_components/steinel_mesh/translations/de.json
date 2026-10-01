@@ -25,7 +25,8 @@
       "invalid_auth": "Benutzername oder Passwort ungültig"
     },
     "abort": {
-      "already_configured": "Dieses Gateway ist bereits eingerichtet"
+      "already_configured": "Dieses Gateway ist bereits eingerichtet",
+      "no_mac": "Das Gateway hat seine MAC-Adresse nicht mitgeteilt"
     }
   },
   "entity": {
