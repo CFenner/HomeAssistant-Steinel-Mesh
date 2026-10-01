@@ -41,9 +41,6 @@
       "company_id": {
         "name": "Company-ID"
       },
-      "product_id": {
-        "name": "Produkt-ID"
-      },
       "firmware_revision": {
         "name": "Firmware-Revision"
       },
