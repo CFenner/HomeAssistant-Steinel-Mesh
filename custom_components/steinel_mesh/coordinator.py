@@ -8,11 +8,13 @@ from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import GatewayAuthError, GatewayClient, GatewayError
 from .const import DOMAIN, REFRESH_AFTER_COMMAND, UPDATE_INTERVAL
+from .device_link import link_nodes_to_gateway
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,7 +37,27 @@ class GatewayCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
             raise ConfigEntryAuthFailed(str(err)) from err
         except GatewayError as err:
             raise UpdateFailed(str(err)) from err
-        return {node["address"]: node for node in payload.get("nodes", [])}
+        nodes = {node["address"]: node for node in payload.get("nodes", [])}
+        self._link_to_gateway(payload, nodes)
+        return nodes
+
+    def _link_to_gateway(self, payload: dict[str, Any], nodes: dict[str, dict[str, Any]]) -> None:
+        """Show the mesh devices as connected via the gateway's ESPHome device.
+
+        The gateway reports its Wi-Fi MAC, which is how Home Assistant registers
+        the ESPHome device. Older gateway firmware does not report it; then no
+        link is made. The devices are created by the entities after the first
+        refresh, so this runs on every update until they all exist.
+        """
+        mac = (payload.get("gateway") or {}).get("mac")
+        if not mac:
+            return
+        entry_id = self.config_entry.entry_id
+        link_nodes_to_gateway(
+            dr.async_get(self.hass),
+            gateway_connection=(dr.CONNECTION_NETWORK_MAC, dr.format_mac(mac)),
+            node_identifiers=[(DOMAIN, f"{entry_id}_{address}") for address in nodes],
+        )
 
     async def async_command(self, address: str, **kwargs: Any) -> None:
         """Send a command, then re-read state once the mesh has acted on it."""

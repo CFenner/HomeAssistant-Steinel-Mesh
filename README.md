@@ -34,7 +34,7 @@ Then add the integration under *Settings → Devices & services → Add integrat
 
 ## Entities
 
-Each device of the network appears as a Home Assistant device with:
+Each device of the network appears as a Home Assistant device. When the gateway reports its MAC address (firmware with the `/api/nodes` `gateway` field) and Home Assistant already knows the gateway's ESPHome device, the devices are shown as *connected via* that ESPHome device. Each device has:
 
 | Entity | For devices with | Notes |
 |---|---|---|
