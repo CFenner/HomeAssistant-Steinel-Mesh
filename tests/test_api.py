@@ -41,6 +41,7 @@ NODES = {
                 "on": True,
                 "brightness": 40,
                 "auto": False,
+                "threshold": 25,
                 "sensors": [{"element": 3, "property": "0x004E", "raw": "400D03", "lux": 2000.0}],
             },
         }
@@ -142,9 +143,19 @@ def test_commands_use_query_args_and_clamp_brightness(host):
             await client.send_command("0x0010", on=True)
             await client.send_command("0x0010", brightness=250)
             await client.send_command("0x0010", auto=False)
+            await client.send_command("0x0010", threshold=25)
+            await client.send_command("0x0010", threshold=5000)
+            await client.send_command("0x0010", threshold=0)
 
     run(go())
-    assert Gateway.received == [{"on": ["1"]}, {"brightness": ["100"]}, {"auto": ["0"]}]
+    assert Gateway.received == [
+        {"on": ["1"]},
+        {"brightness": ["100"]},
+        {"auto": ["0"]},
+        {"threshold": ["25"]},
+        {"threshold": ["1500"]},
+        {"threshold": ["1"]},
+    ]
 
 
 def test_unknown_node_is_a_gateway_error(host):

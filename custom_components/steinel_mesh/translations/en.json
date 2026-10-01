@@ -22,6 +22,9 @@
   "entity": {
     "switch": {
       "auto_mode": { "name": "Automatic mode" }
+    },
+    "number": {
+      "twilight_threshold": { "name": "Twilight threshold" }
     }
   }
 }

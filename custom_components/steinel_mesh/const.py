@@ -3,7 +3,7 @@
 from datetime import timedelta
 
 DOMAIN = "steinel_mesh"
-PLATFORMS = ["light", "switch", "sensor", "binary_sensor"]
+PLATFORMS = ["light", "switch", "number", "sensor", "binary_sensor"]
 
 UPDATE_INTERVAL = timedelta(seconds=10)
 # A command is queued on the gateway and sent over Bluetooth Mesh a moment
