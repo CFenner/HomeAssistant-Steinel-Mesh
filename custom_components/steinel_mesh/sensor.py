@@ -48,13 +48,14 @@ class _Reading(GatewayNodeEntity):
 
 
 class SteinelLux(_Reading, SensorEntity):
+    _attr_translation_key = "illuminance"
     _attr_device_class = SensorDeviceClass.ILLUMINANCE
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = LIGHT_LUX
 
     def __init__(self, coordinator, address: str, reading: dict[str, Any]) -> None:
         super().__init__(coordinator, address, reading, "lux")
-        self._attr_name = f"Illuminance (element {self._element})"
+        self._attr_translation_placeholders = {"element": str(self._element)}
 
     @property
     def native_value(self) -> float | None:
@@ -65,12 +66,16 @@ class SteinelLux(_Reading, SensorEntity):
 class SteinelRawReading(_Reading, SensorEntity):
     """Undecoded sensor property; hidden by default, useful to see what a device offers."""
 
+    _attr_translation_key = "raw_reading"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_entity_registry_enabled_default = False
 
     def __init__(self, coordinator, address: str, reading: dict[str, Any]) -> None:
         super().__init__(coordinator, address, reading, "raw")
-        self._attr_name = f"Sensor {self._property} (element {self._element})"
+        self._attr_translation_placeholders = {
+            "property": str(self._property),
+            "element": str(self._element),
+        }
 
     @property
     def native_value(self) -> str | None:

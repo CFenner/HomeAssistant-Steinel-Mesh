@@ -21,10 +21,33 @@
   },
   "entity": {
     "switch": {
-      "auto_mode": { "name": "Automatic mode" }
+      "auto_mode": {
+        "name": "Automatic mode"
+      }
     },
     "number": {
-      "twilight_threshold": { "name": "Twilight threshold" }
+      "twilight_threshold": {
+        "name": "Twilight threshold"
+      }
+    },
+    "binary_sensor": {
+      "reachable": {
+        "name": "Mesh connection"
+      },
+      "presence": {
+        "name": "Presence (element {element})"
+      },
+      "motion": {
+        "name": "Motion (element {element})"
+      }
+    },
+    "sensor": {
+      "illuminance": {
+        "name": "Illuminance (element {element})"
+      },
+      "raw_reading": {
+        "name": "Sensor {property} (element {element})"
+      }
     }
   }
 }

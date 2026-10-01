@@ -38,7 +38,7 @@ class SteinelReachable(GatewayNodeEntity, BinarySensorEntity):
 
     _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
     _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _attr_name = "Mesh connection"
+    _attr_translation_key = "reachable"
 
     def __init__(self, coordinator, address: str) -> None:
         super().__init__(coordinator, address, "reachable")
@@ -65,7 +65,8 @@ class SteinelDetection(GatewayNodeEntity, BinarySensorEntity):
             if kind == "presence"
             else BinarySensorDeviceClass.MOTION
         )
-        self._attr_name = f"{kind.capitalize()} (element {self._element})"
+        self._attr_translation_key = kind
+        self._attr_translation_placeholders = {"element": str(self._element)}
 
     @property
     def is_on(self) -> bool | None:
