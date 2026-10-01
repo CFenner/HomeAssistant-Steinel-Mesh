@@ -1,0 +1,53 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Steinel Mesh",
+        "description": "Enter the address and web login of the ESP32-C3 gateway.",
+        "data": {
+          "host": "Host or IP address",
+          "username": "Username",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot reach the gateway",
+      "invalid_auth": "Invalid username or password"
+    },
+    "abort": {
+      "already_configured": "This gateway is already configured"
+    }
+  },
+  "entity": {
+    "switch": {
+      "auto_mode": {
+        "name": "Automatic mode"
+      }
+    },
+    "number": {
+      "twilight_threshold": {
+        "name": "Twilight threshold"
+      }
+    },
+    "binary_sensor": {
+      "reachable": {
+        "name": "Mesh connection"
+      },
+      "presence": {
+        "name": "Presence (element {element})"
+      },
+      "motion": {
+        "name": "Motion (element {element})"
+      }
+    },
+    "sensor": {
+      "illuminance": {
+        "name": "Illuminance (element {element})"
+      },
+      "raw_reading": {
+        "name": "Sensor {property} (element {element})"
+      }
+    }
+  }
+}
