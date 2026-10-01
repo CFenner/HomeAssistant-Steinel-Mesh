@@ -55,8 +55,8 @@
       "twilight_threshold": {
         "name": "Dämmerungsschwelle"
       },
-      "regular_time": {
-        "name": "Reguläre Zeit"
+      "run_time": {
+        "name": "Laufzeit"
       }
     }
   }

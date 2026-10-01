@@ -1,4 +1,4 @@
-"""Twilight threshold and regular time of a lamp."""
+"""Twilight threshold and run time of a lamp."""
 
 from __future__ import annotations
 
@@ -22,15 +22,15 @@ async def async_setup_entry(
         if {"sensor", "light_control"} <= set(node.get("roles", []))
     )
 
-    # A lamp reports its regular time only once the gateway has read it, which can
+    # A lamp reports its run time only once the gateway has read it, which can
     # take several passes, so the entities are created as the values appear.
     known: set[str] = set()
 
     def _discover() -> None:
         new = [
-            SteinelRegularTime(coordinator, address)
+            SteinelRunTime(coordinator, address)
             for address, node in coordinator.data.items()
-            if address not in known and node.get("state", {}).get("regular_time") is not None
+            if address not in known and node.get("state", {}).get("run_time") is not None
         ]
         known.update(entity._address for entity in new)
         if new:
@@ -63,10 +63,10 @@ class SteinelTwilightThreshold(GatewayNodeEntity, NumberEntity):
         await self.coordinator.async_command(self._address, threshold=int(value))
 
 
-class SteinelRegularTime(GatewayNodeEntity, NumberEntity):
+class SteinelRunTime(GatewayNodeEntity, NumberEntity):
     """The app's main light time: how long the lamp stays on after the last motion."""
 
-    _attr_translation_key = "regular_time"
+    _attr_translation_key = "run_time"
     _attr_entity_category = EntityCategory.CONFIG
     _attr_device_class = NumberDeviceClass.DURATION
     _attr_native_unit_of_measurement = UnitOfTime.SECONDS
@@ -76,11 +76,11 @@ class SteinelRegularTime(GatewayNodeEntity, NumberEntity):
     _attr_mode = NumberMode.BOX
 
     def __init__(self, coordinator, address: str) -> None:
-        super().__init__(coordinator, address, "regular_time")
+        super().__init__(coordinator, address, "run_time")
 
     @property
     def native_value(self) -> float | None:
-        return self.node_state.get("regular_time")
+        return self.node_state.get("run_time")
 
     async def async_set_native_value(self, value: float) -> None:
-        await self.coordinator.async_command(self._address, regular_time=int(value))
+        await self.coordinator.async_command(self._address, run_time=int(value))

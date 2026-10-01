@@ -39,8 +39,8 @@
       "twilight_threshold": {
         "name": "Twilight threshold"
       },
-      "regular_time": {
-        "name": "Regular time"
+      "run_time": {
+        "name": "Run time"
       }
     },
     "binary_sensor": {

@@ -40,7 +40,7 @@ Each device of the network appears as a Home Assistant device. When the gateway 
 |---|---|---|
 | Light | a light output | on/off and brightness |
 | Automatic mode (switch) | Light Control | on: the lamp follows its own sensors; off: manual. A manual on/off or brightness command switches automatic mode off first. |
-| Regular time (number, configuration) | a lamp that reports it | the app's main light time: how long the lamp stays on after the last motion; 5–3600 s. Appears once the gateway has read the value |
+| Run time (number, configuration) | a lamp that reports it | how long the lamp stays on after the last motion (the Steinel app's "regular time", its main light time); 5–3600 s. Appears once the gateway has read the value |
 | Twilight threshold (number, configuration) | a sensor and Light Control | ambient light level in lx below which automatic mode switches the lamp on; 1–1500 lx |
 | Illuminance | an illuminance sensor | in lx |
 | Firmware revision, Hardware revision | devices that report them | diagnostic; the gateway asks each device once after it starts, and the values also appear as the device's software and hardware version. Devices that do not provide them show nothing |
@@ -55,7 +55,7 @@ Devices are read about every 20 seconds by the gateway and fetched by Home Assis
 The integration uses the gateway's HTTP API with Digest authentication:
 
 - `GET /api/nodes` returns the devices with their models and live state.
-- `POST /api/nodes/<address>?on=1&brightness=40&auto=0&threshold=25` queues a command. `on` and `auto` accept `0`/`1`; `brightness` is 0–100; `threshold` is the twilight threshold in lx (1–1500); `regular_time` is the regular (main light) time in seconds (5–3600). Automatic mode (`auto=1`) cannot be combined with `on` or `brightness`.
+- `POST /api/nodes/<address>?on=1&brightness=40&auto=0&threshold=25` queues a command. `on` and `auto` accept `0`/`1`; `brightness` is 0–100; `threshold` is the twilight threshold in lx (1–1500); `run_time` is the run time in seconds (5–3600). Automatic mode (`auto=1`) cannot be combined with `on` or `brightness`.
 
 ## Development
 
