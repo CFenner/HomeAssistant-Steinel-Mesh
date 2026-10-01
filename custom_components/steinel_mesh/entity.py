@@ -25,8 +25,9 @@ class GatewayNodeEntity(CoordinatorEntity[GatewayCoordinator]):
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry_id}_{address}")},
             name=node["name"],
-            manufacturer="Steinel",
+            manufacturer=node.get("manufacturer") or "Steinel",
             model=node.get("product") or f"Product {node.get('product_id', '?')}",
+            model_id=node.get("product_id"),
         )
 
     @property

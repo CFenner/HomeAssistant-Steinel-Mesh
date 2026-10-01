@@ -35,12 +35,14 @@ class FakeRegistry:
             setattr(self.devices[device_id], key, value)
 
 
-def device(device_id, identifiers=(), connections=(), via=None):
+def device(device_id, identifiers=(), connections=(), via=None, sw_version=None, hw_version=None):
     return SimpleNamespace(
         id=device_id,
         identifiers=set(identifiers),
         connections=set(connections),
         via_device_id=via,
+        sw_version=sw_version,
+        hw_version=hw_version,
     )
 
 
@@ -96,3 +98,39 @@ def test_is_idempotent_and_does_not_rewrite_existing_links():
         registry, gateway_connection=GATEWAY, node_identifiers=NODES
     ) == 0
     assert registry.updates == []
+
+
+def test_reads_revisions_from_the_sensor_readings():
+    node = {
+        "state": {
+            "sensors": [
+                {"element": 2, "property": "0x0042", "raw": "00", "motion": False},
+                {"element": 2, "property": "0x000E", "raw": "07", "firmware_revision": 7},
+                {"element": 2, "property": "0x0010", "raw": "02", "hardware_revision": 2},
+            ]
+        }
+    }
+    assert device_link.revisions_from_node(node) == ("7", "2")
+
+
+def test_a_device_without_revisions_reports_none():
+    # An empty answer to the probe has no decoded revision in the reading.
+    node = {"state": {"sensors": [{"element": 2, "property": "0x000E", "raw": ""}]}}
+    assert device_link.revisions_from_node(node) == (None, None)
+    assert device_link.revisions_from_node({}) == (None, None)
+
+
+def test_revisions_are_written_once_and_only_when_they_change():
+    registry = FakeRegistry({"a": device("a", identifiers=[NODES[0]])})
+    assert device_link.apply_revisions(registry, NODES[0], sw_version="7", hw_version="2")
+    assert (registry.devices["a"].sw_version, registry.devices["a"].hw_version) == ("7", "2")
+    assert not device_link.apply_revisions(registry, NODES[0], sw_version="7", hw_version="2")
+    assert len(registry.updates) == 1
+    # A revision the device stops reporting is not erased.
+    assert not device_link.apply_revisions(registry, NODES[0], sw_version=None, hw_version=None)
+    assert registry.devices["a"].sw_version == "7"
+
+
+def test_revisions_for_a_device_that_does_not_exist_yet_are_skipped():
+    registry = FakeRegistry({})
+    assert not device_link.apply_revisions(registry, NODES[0], sw_version="7", hw_version=None)

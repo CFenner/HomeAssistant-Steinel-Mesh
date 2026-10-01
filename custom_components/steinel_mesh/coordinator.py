@@ -14,7 +14,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .api import GatewayAuthError, GatewayClient, GatewayError
 from .const import DOMAIN, REFRESH_AFTER_COMMAND, UPDATE_INTERVAL
-from .device_link import link_nodes_to_gateway
+from .device_link import apply_revisions, link_nodes_to_gateway, revisions_from_node
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -39,7 +39,22 @@ class GatewayCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
             raise UpdateFailed(str(err)) from err
         nodes = {node["address"]: node for node in payload.get("nodes", [])}
         self._link_to_gateway(payload, nodes)
+        self._record_revisions(nodes)
         return nodes
+
+    def _record_revisions(self, nodes: dict[str, dict[str, Any]]) -> None:
+        """Show a device's reported firmware and hardware revision on its device page."""
+        registry = dr.async_get(self.hass)
+        entry_id = self.config_entry.entry_id
+        for address, node in nodes.items():
+            firmware, hardware = revisions_from_node(node)
+            if firmware is not None or hardware is not None:
+                apply_revisions(
+                    registry,
+                    (DOMAIN, f"{entry_id}_{address}"),
+                    sw_version=firmware,
+                    hw_version=hardware,
+                )
 
     def _link_to_gateway(self, payload: dict[str, Any], nodes: dict[str, dict[str, Any]]) -> None:
         """Show the mesh devices as connected via the gateway's ESPHome device.
