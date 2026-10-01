@@ -60,7 +60,6 @@ class SteinelLux(_Reading, SensorEntity):
 
     def __init__(self, coordinator, address: str, reading: dict[str, Any]) -> None:
         super().__init__(coordinator, address, reading, "lux")
-        self._attr_translation_placeholders = {"element": str(self._element)}
 
     @property
     def native_value(self) -> float | None:
@@ -77,10 +76,7 @@ class SteinelRawReading(_Reading, SensorEntity):
 
     def __init__(self, coordinator, address: str, reading: dict[str, Any]) -> None:
         super().__init__(coordinator, address, reading, "raw")
-        self._attr_translation_placeholders = {
-            "property": str(self._property),
-            "element": str(self._element),
-        }
+        self._attr_translation_placeholders = {"property": str(self._property)}
 
     @property
     def native_value(self) -> str | None:
