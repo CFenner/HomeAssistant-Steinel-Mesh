@@ -1,0 +1,78 @@
+"""Illuminance readings, plus raw values for properties we cannot decode."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import LIGHT_LUX, EntityCategory
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from .const import DOMAIN, PROPERTY_MOTION, PROPERTY_PRESENCE
+from .entity import GatewayNodeEntity, add_sensor_entities
+
+
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+) -> None:
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+
+    def factory(address: str, reading: dict[str, Any]):
+        if "lux" in reading:
+            return SteinelLux(coordinator, address, reading)
+        if reading["property"] in (PROPERTY_PRESENCE, PROPERTY_MOTION):
+            return None  # shown as a binary sensor
+        return SteinelRawReading(coordinator, address, reading)
+
+    add_sensor_entities(entry, coordinator, async_add_entities, factory)
+
+
+class _Reading(GatewayNodeEntity):
+    def __init__(self, coordinator, address: str, reading: dict[str, Any], kind: str) -> None:
+        self._element = reading["element"]
+        self._property = reading["property"]
+        super().__init__(coordinator, address, f"{kind}_{self._element}_{self._property}")
+
+    @property
+    def reading(self) -> dict[str, Any] | None:
+        for reading in self.node_state.get("sensors", []):
+            if reading["element"] == self._element and reading["property"] == self._property:
+                return reading
+        return None
+
+
+class SteinelLux(_Reading, SensorEntity):
+    _attr_device_class = SensorDeviceClass.ILLUMINANCE
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = LIGHT_LUX
+
+    def __init__(self, coordinator, address: str, reading: dict[str, Any]) -> None:
+        super().__init__(coordinator, address, reading, "lux")
+        self._attr_name = f"Illuminance (element {self._element})"
+
+    @property
+    def native_value(self) -> float | None:
+        reading = self.reading
+        return None if reading is None else reading.get("lux")
+
+
+class SteinelRawReading(_Reading, SensorEntity):
+    """Undecoded sensor property; hidden by default, useful to see what a device offers."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(self, coordinator, address: str, reading: dict[str, Any]) -> None:
+        super().__init__(coordinator, address, reading, "raw")
+        self._attr_name = f"Sensor {self._property} (element {self._element})"
+
+    @property
+    def native_value(self) -> str | None:
+        reading = self.reading
+        return None if reading is None else reading.get("raw")
