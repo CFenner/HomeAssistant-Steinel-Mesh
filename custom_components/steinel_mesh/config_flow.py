@@ -77,7 +77,10 @@ class SteinelMeshGatewayConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """A gateway announced itself as an ESPHome device."""
         host = str(discovery_info.ip_address)
-        name = discovery_info.name.removesuffix(ESPHOME_SERVICE)
+        # The friendly name set in the gateway firmware, else its device name.
+        name = discovery_info.properties.get(
+            "friendly_name"
+        ) or discovery_info.name.removesuffix(ESPHOME_SERVICE)
         # ESPHome announces the MAC, which survives an IP change and tells
         # gateways apart.
         mac = discovery_info.properties.get("mac")
