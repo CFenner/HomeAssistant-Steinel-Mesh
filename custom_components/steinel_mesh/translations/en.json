@@ -1,6 +1,6 @@
 {
   "config": {
-    "flow_title": "Steinel Mesh ({name})",
+    "flow_title": "{name}",
     "step": {
       "user": {
         "title": "Steinel Mesh",
