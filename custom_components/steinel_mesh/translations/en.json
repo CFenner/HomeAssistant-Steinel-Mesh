@@ -38,6 +38,9 @@
     "number": {
       "twilight_threshold": {
         "name": "Twilight threshold"
+      },
+      "run_time": {
+        "name": "Run time"
       }
     },
     "binary_sensor": {
