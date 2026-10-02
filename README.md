@@ -30,7 +30,7 @@ Have you used the integration with another Steinel Bluetooth Mesh device? Please
 
 **Manual:** copy `custom_components/steinel_mesh` into `<config>/custom_components/` and restart Home Assistant.
 
-The gateway is discovered automatically when it announces itself on the network (it shows up under *Settings → Devices & services* as a discovered Steinel Mesh gateway); you then only enter its web login. If it is not discovered, add the integration manually under *Settings → Devices & services → Add integration → Steinel Mesh* and enter the gateway's host, username and password.
+The gateway is discovered automatically when it announces itself on the network (it shows up under *Settings → Devices & services* as a discovered Steinel Mesh gateway); you then only enter its web login. Discovery matches the ESPHome project name `CFenner.Steinel Mesh Gateway` that the gateway firmware announces; gateways still running the older name `cfenner.steinel_mesh_gateway` are discovered as well. If it is not discovered, add the integration manually under *Settings → Devices & services → Add integration → Steinel Mesh* and enter the gateway's host, username and password.
 
 ## Entities
 
