@@ -56,6 +56,7 @@ class SteinelLux(_Reading, SensorEntity):
     _attr_device_class = SensorDeviceClass.ILLUMINANCE
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = LIGHT_LUX
+    _attr_suggested_display_precision = 0
 
     def __init__(self, coordinator, address: str, reading: dict[str, Any]) -> None:
         super().__init__(coordinator, address, reading, "lux")
