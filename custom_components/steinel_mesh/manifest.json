@@ -15,6 +15,12 @@
     {
       "type": "_esphomelib._tcp.local.",
       "properties": {
+        "project_name": "cfenner.steinel mesh gateway"
+      }
+    },
+    {
+      "type": "_esphomelib._tcp.local.",
+      "properties": {
         "project_name": "cfenner.steinel_mesh_gateway"
       }
     }
